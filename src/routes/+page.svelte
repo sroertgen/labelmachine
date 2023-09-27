@@ -11,8 +11,8 @@
 	let published = false;
 </script>
 
-<div class="flex flex-col items-center">
-	<div class="flex flex-row justify-between items-center w-full md:w-1/2">
+<div class="flex flex-col mx-auto w-full md:w-2/3">
+	<div class="flex flex-row justify-between items-center">
 		<h1 class="text-3xl font-bold text-purple-500 italic">Label Machine</h1>
 		{#if !$user.pk}
 			<button onclick="login_modal.showModal()" class="btn bg-purple-500 text-black">Login</button>
@@ -23,12 +23,12 @@
 			/>
 		{/if}
 	</div>
-	<div class="md:w-1/2 w-full">
+	<div>
 		<Search />
 		<Preview />
 		<Modal />
 		<ModalLogin />
-		<div class="m-2 flex flex-row justify-center">
+		<div class="gap-4 mt-2 flex flex-row justify-center">
 			<button
 				disabled={!$event.id}
 				onclick="my_modal_2.showModal()"
