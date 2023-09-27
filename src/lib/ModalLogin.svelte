@@ -1,14 +1,12 @@
 <script>
 	import { ndkStore } from '$lib/ndk';
 	import { user } from '$lib/user';
-	import { labels, event } from '$lib/store';
 	import { generatePrivateKey, getPublicKey } from 'nostr-tools';
 
 	async function login() {
 		if (typeof window.nostr !== 'undefined') {
 			console.log('nostr is available!');
 			const pk = await window.nostr.getPublicKey();
-			console.log('pk', pk);
 			await user.setUser($ndkStore, pk);
 		} else {
 			alert(`window.nostr is not available. Please install a compatible 

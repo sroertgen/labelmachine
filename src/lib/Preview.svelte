@@ -12,7 +12,6 @@
 			let noteId;
 			try {
 				const { type, data } = nip19.decode(input);
-				console.log(type, data);
 				if (type === 'note') {
 					noteId = data;
 				} else if (type === 'nevent') {
