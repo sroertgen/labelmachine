@@ -74,10 +74,10 @@ function createLabels() {
         console.log(event)
         await event.publish()
       }
+      return true
     }
   }
 }
-
 
 export const searchInput = writable("")
 
