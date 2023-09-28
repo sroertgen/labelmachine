@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.nostr-zap-dialog {
+	background-color: white;
+}
