@@ -28,9 +28,9 @@
 			<button on:click={async () => await login()} class="btn">Login with Browser Extension</button>
 			<button on:click={() => genKey()} class="btn">Generate Key</button>
 		{:else}
-			<form class="flex flex-col justify-center" method="dialog">
+			<form class="text-center" method="dialog">
 				<p>Logged In! Now do some labeling</p>
-				<button class="btn bg-green-400 hover:bg-green-400 text-black">Close!</button>
+				<button class="btn bg-green-400 hover:bg-green-400 text-black w-fit mx-auto">Close!</button>
 			</form>
 		{/if}
 	</div>

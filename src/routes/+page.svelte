@@ -3,6 +3,7 @@
 	import Preview from '$lib/Preview.svelte';
 	import Modal from '$lib/Modal.svelte';
 	import ModalLogin from '$lib/ModalLogin.svelte';
+	import Avatar from '$lib/Avatar.svelte';
 	import Check from '$lib/icons/check.svelte';
 	import { labels, event } from '$lib/store';
 	import { user } from '$lib/user';
@@ -12,23 +13,20 @@
 </script>
 
 <div class="flex flex-col mx-auto w-full md:w-2/3">
-	<div class="flex flex-row justify-between items-center">
+	<div class="flex flex-row justify-between items-center mt-2 mx-2">
 		<h1 class="text-3xl font-bold text-purple-500 italic">Label Machine</h1>
 		{#if !$user.pk}
 			<button onclick="login_modal.showModal()" class="btn bg-purple-500 text-black">Login</button>
 		{:else}
-			<img
-				class="w-10 h-10 m-2 rounded-full border-purple-500 border"
-				src={$user.profile.image || `https://robohash.org/${$user.npub}.png`}
-			/>
+			<Avatar />
 		{/if}
 	</div>
-	<div>
+	<div class="mx-2">
 		<Search />
 		<Preview />
 		<Modal />
 		<ModalLogin />
-		<div class="gap-4 mt-2 flex flex-row justify-center">
+		<div class="gap-4 mt-2 flex md:flex-row flex-col justify-center">
 			<button
 				disabled={!$event.id}
 				onclick="my_modal_2.showModal()"
@@ -51,6 +49,13 @@
 				{/if}
 				Publish labels!
 			</button>
+			<button
+				on:click={(e) => {
+					e.preventDefault();
+					labels.reset();
+				}}
+				class="btn bg-red-400 hover:bg-red-400 text-black md:mt-0 mt-6">Start over!</button
+			>
 		</div>
 	</div>
 </div>

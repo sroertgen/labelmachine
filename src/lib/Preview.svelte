@@ -39,7 +39,7 @@
 	})();
 </script>
 
-<div class="border-white border-2 border-solid rounded min-h-[64px]">
+<div class="border-white border-2 border-solid rounded h-64 overflow-auto">
 	{#if Object.keys($event).length}
 		<div class="p-2">
 			{#key $labels.length}
@@ -51,6 +51,9 @@
 			<p class="whitespace-pre-wrap break-words">{$event.content}</p>
 		</div>
 	{:else}
-		<p class="m-24 text-center">Enter an event id, note id or nevent</p>
-	{/if}
+		<div class="flex flex-col items-center justify-center h-full">
+			<p class="">Login & Enter an event id, note id or nevent</p>
+			<p class="">Then do some labeling and publish!</p>
+		</div>
+		<p />{/if}
 </div>
