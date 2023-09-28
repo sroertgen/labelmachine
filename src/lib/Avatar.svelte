@@ -3,7 +3,7 @@
 </script>
 
 <details class="dropdown dropdown-bottom dropdown-end">
-	<summary class="avatar w-10">
+	<summary class="avatar w-10 h-10">
 		<img
 			class="rounded-full border-purple-500 border"
 			src={$user.profile.image || `https://robohash.org/${$user.npub}.png`}
