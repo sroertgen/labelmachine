@@ -5,11 +5,13 @@
 	import ModalLogin from '$lib/ModalLogin.svelte';
 	import Avatar from '$lib/Avatar.svelte';
 	import Check from '$lib/icons/check.svelte';
-	import { labels, event } from '$lib/store';
+	import { labels, event, searchInput } from '$lib/store';
 	import { user } from '$lib/user';
 
 	let publishing = false;
 	let published = false;
+
+	$: publishEnabled = $labels[0].selectedType !== 'What info to add?' && Boolean($user.pk);
 </script>
 
 <div class="flex flex-col mx-auto w-full md:w-2/3">
@@ -32,27 +34,36 @@
 				onclick="my_modal_2.showModal()"
 				class="btn bg-green-400 hover:bg-green-400 text-black">Add Labels!</button
 			>
-			<button
-				disabled={$labels[0].selectedType === 'What info to add?' || !$user.pk}
-				on:click={async () => {
-					publishing = true;
-					await labels.publishEvents();
-					publishing = false;
-					published = true;
-				}}
-				class="btn bg-green-400 hover:bg-green-400 text-black"
+			<div
+				class="tooltip w-full"
+				data-tip={publishEnabled ? null : 'Login, add an event and do some labeling!'}
 			>
-				{#if publishing}
-					<span class="loading loading-spinner" />
-				{:else if published}
-					<Check />
-				{/if}
-				Publish labels!
-			</button>
+				<button
+					disabled={!publishEnabled}
+					on:click={async () => {
+						publishing = true;
+						await labels.publishEvents();
+						publishing = false;
+						published = true;
+					}}
+					class="btn bg-green-400 hover:bg-green-400 text-black w-full"
+				>
+					{#if publishing}
+						<span class="loading loading-spinner" />
+					{:else if published}
+						<Check />
+					{/if}
+					Publish labels!
+				</button>
+			</div>
 			<button
 				on:click={(e) => {
 					e.preventDefault();
+					published = false;
+					publishing = false;
 					labels.reset();
+					searchInput.set('');
+					event.set({});
 				}}
 				class="btn bg-red-400 hover:bg-red-400 text-black md:mt-0 mt-6">Start over!</button
 			>
