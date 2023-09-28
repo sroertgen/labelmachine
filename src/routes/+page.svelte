@@ -35,7 +35,7 @@
 				class="btn bg-green-400 hover:bg-green-400 text-black">Add Labels!</button
 			>
 			<div
-				class="tooltip w-full"
+				class="tooltip"
 				data-tip={publishEnabled ? null : 'Login, add an event and do some labeling!'}
 			>
 				<button
@@ -46,7 +46,7 @@
 						publishing = false;
 						published = true;
 					}}
-					class="btn bg-green-400 hover:bg-green-400 text-black w-full"
+					class="btn bg-green-400 hover:bg-green-400 text-black w-full md:w-fit"
 				>
 					{#if publishing}
 						<span class="loading loading-spinner" />
