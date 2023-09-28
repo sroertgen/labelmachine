@@ -1,5 +1,6 @@
 <script>
 	import { labels } from '$lib/store';
+	import Plus from './icons/plus.svelte';
 
 	/**
 	 * @typedef {Object} Label
@@ -64,6 +65,6 @@
 	{/if}
 	<button
 		on:click={() => labels.addLabel()}
-		class="mx-auto my-2 btn btn-circle bg-green-400 hover:bg-green-400 text-black">+</button
+		class="mx-auto my-2 btn btn-circle bg-green-400 hover:bg-green-400 text-black"><Plus /></button
 	>
 </div>
