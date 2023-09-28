@@ -14,7 +14,7 @@
 	$: publishEnabled = $labels[0].selectedType !== 'What info to add?' && Boolean($user.pk);
 </script>
 
-<div class="flex flex-col mx-auto w-full md:w-2/3">
+<div class="flex flex-col mx-auto w-full md:max-w-[640px]">
 	<div class="flex flex-row justify-between items-center mt-2 mx-2">
 		<h1 class="text-3xl font-bold text-purple-500 italic">Label Machine</h1>
 		{#if !$user.pk}
