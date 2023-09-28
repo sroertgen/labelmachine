@@ -2,9 +2,8 @@ import { writable, get } from "svelte/store";
 import { nanoid } from 'nanoid';
 import { ndkStore } from "$lib/ndk";
 import { user as userStore } from "$lib/user";
-import { NDKPrivateKeySigner, NDKEvent } from "@nostr-dev-kit/ndk";
+import { NDKPrivateKeySigner, NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
 
-const ndk = get(ndkStore)
 
 const createlabel = () => ({
   id: nanoid(),
@@ -62,17 +61,22 @@ function createLabels() {
       return events
     },
     publishEvents: async () => {
+      const ndk = get(ndkStore)
       const user = get(userStore)
       const eventId = get(event).id
       const events = labels.buildEvents(eventId)
-      const signer = new NDKPrivateKeySigner(user.pk);
-      ndk.signer = signer
-      for (let e of events) {
+      ndk.signer = user.signer;
+      user.signer.user().then(async (user) => {
+        if (!!user.npub) {
+          console.log("Permission granted to read their public key:", user.npub);
+        }
+      });
+      for await (const e of events) {
         const event = new NDKEvent(ndk);
         event.kind = 1985
         event.tags = e
-        console.log(event)
         await event.publish()
+        console.log(event)
       }
       return true
     }

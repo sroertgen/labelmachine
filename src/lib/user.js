@@ -1,11 +1,13 @@
 import { writable } from "svelte/store"
 import { nip19 } from "nostr-tools"
-//
+
 // user
 const defaultUser = {
   pk: "",
   npub: "",
-  profile: {}
+  profile: {},
+  signer: {},
+  sk: "",
 }
 
 function createUser() {
@@ -15,11 +17,11 @@ function createUser() {
     subscribe,
     set,
     update,
-    setUser: async (ndk, pk) => {
+    setUser: async (ndk, pk, signer) => {
       const npub = nip19.npubEncode(pk)
       const nUser = ndk.getUser({ npub: npub })
       await nUser.fetchProfile()
-      update(u => ({ ...u, pk: pk, npub: npub, profile: nUser.profile }))
+      update(u => ({ ...u, pk: pk, npub: npub, profile: nUser.profile, signer }))
     },
     reset: () => {
       set(defaultUser)

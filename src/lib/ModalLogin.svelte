@@ -2,12 +2,14 @@
 	import { ndkStore } from '$lib/ndk';
 	import { user } from '$lib/user';
 	import { generatePrivateKey, getPublicKey } from 'nostr-tools';
+	import { NDKPrivateKeySigner, NDKNip07Signer, NDKEvent } from '@nostr-dev-kit/ndk';
 
 	async function login() {
 		if (typeof window.nostr !== 'undefined') {
 			console.log('nostr is available!');
 			const pk = await window.nostr.getPublicKey();
-			await user.setUser($ndkStore, pk);
+			const signer = new NDKNip07Signer();
+			await user.setUser($ndkStore, pk, signer);
 		} else {
 			alert(`window.nostr is not available. Please install a compatible 
     browser extension (e.g. Alby).`);
@@ -16,7 +18,8 @@
 	function genKey() {
 		let sk = generatePrivateKey(); // `sk` is a hex string
 		let pk = getPublicKey(sk); // `pk` is a hex string
-		user.setUser($ndkStore, pk);
+		const signer = new NDKPrivateKeySigner(sk);
+		user.setUser($ndkStore, pk, signer);
 	}
 </script>
 
