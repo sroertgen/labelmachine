@@ -18,7 +18,10 @@
 	<div class="flex flex-row justify-between items-center mt-2 mx-2">
 		<h1 class="text-3xl font-bold text-purple-500 italic">Label Machine</h1>
 		{#if !$user.pk}
-			<button onclick="login_modal.showModal()" class="btn bg-purple-500 text-black">Login</button>
+			<button
+				onclick="login_modal.showModal()"
+				class="btn bg-purple-500 hover:bg-purple-500 text-black">Login</button
+			>
 		{:else}
 			<Avatar />
 		{/if}
@@ -68,5 +71,20 @@
 				class="btn bg-red-400 hover:bg-red-400 text-black md:mt-0 mt-6">Start over!</button
 			>
 		</div>
+	</div>
+	<div class="mt-12 text-center flex flex-col md:flex-row items-center justify-between gap-6">
+		<p>
+			Made with 💜 by <a
+				class="underline"
+				href="https://coracle.social/npub1r30l8j4vmppvq8w23umcyvd3vct4zmfpfkn4c7h2h057rmlfcrmq9xt9ma"
+				>laoc42</a
+			>
+		</p>
+		<button
+			data-npub="npub1r30l8j4vmppvq8w23umcyvd3vct4zmfpfkn4c7h2h057rmlfcrmq9xt9ma"
+			data-relays="wss://relay.damus.io,wss://relay.snort.social,wss://nostr.wine,wss://relay.nostr.band"
+			class=" h-fit transition-all rounded-md bg-indigo-600/80 py-1 px-3 text-white hover:bg-indigo-700 dark:bg-indigo-400/10 dark:text-indigo-400 ring-1 ring-inset ring-indigo-400/40 dark:hover:bg-indigo-400/20 dark:hover:text-indigo-300 hover:ring-indigo-300 border-0 no-underline"
+			>⚡ Zap LabelMachine</button
+		>
 	</div>
 </div>
