@@ -9,10 +9,8 @@
 	let existingLabels = [];
 
 	async function getAssignedLabels(eventId) {
-		console.log('getting labels', eventId);
 		const filter = { kinds: [1985], limit: 200, '#e': [eventId] };
 		const labels = await $ndkStore.fetchEvents(filter);
-		console.log(labels);
 		assignedLabels.set([...labels]);
 	}
 

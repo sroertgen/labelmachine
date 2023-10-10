@@ -13,7 +13,6 @@
 		labels.forEach((l) => {
 			if (l.tags.some((item) => item[1] === '#t')) {
 				parsedLabels.topics = [...parsedLabels.topics, l.tags.find((t) => t[0] === 'l')[1]];
-				console.log(parsedLabels);
 			} else if (l.tags.some((item) => item[1] === 'ugc')) {
 				parsedLabels.userGeneratedLabels = [
 					...parsedLabels.userGeneratedLabels,
