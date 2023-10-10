@@ -3,8 +3,18 @@
 	import { ndkStore } from '$lib/ndk';
 	import Labels from './Labels.svelte';
 	import { nip19 } from 'nostr-tools';
+	import AssignedLabels from './AssignedLabels.svelte';
 
 	let userProfile;
+	let existingLabels = [];
+
+	async function getAssignedLabels(eventId) {
+		console.log('getting labels', eventId);
+		const filter = { kinds: [1985], limit: 200, '#e': [eventId] };
+		const labels = await $ndkStore.fetchEvents(filter);
+		console.log(labels);
+		existingLabels = [...labels];
+	}
 
 	async function getEvent(input) {
 		if (input.length > 3) {
@@ -23,6 +33,9 @@
 			}
 			const filter = { ids: [noteId] };
 			$event = await $ndkStore.fetchEvent(filter);
+
+			// TODO labels in store speichern und nach publish event neu fetchen
+			getAssignedLabels($event.id);
 		}
 	}
 	async function getUserProfile(pubkey) {
@@ -44,6 +57,9 @@
 		<div class="p-2">
 			{#key $labels.length}
 				<Labels />
+			{/key}
+			{#key existingLabels.length}
+				<AssignedLabels labels={existingLabels} />
 			{/key}
 			<a target="_blank" href="https://snort.social/p/{event.pubkey}">
 				<img class="w-16 h-16 m-2 rounded-full" src={userProfile?.image} />
