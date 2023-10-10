@@ -1,5 +1,5 @@
 <script>
-	import { searchInput, event, labels } from '$lib/store';
+	import { searchInput, event, labels, assignedLabels } from '$lib/store';
 	import { ndkStore } from '$lib/ndk';
 	import Labels from './Labels.svelte';
 	import { nip19 } from 'nostr-tools';
@@ -13,7 +13,7 @@
 		const filter = { kinds: [1985], limit: 200, '#e': [eventId] };
 		const labels = await $ndkStore.fetchEvents(filter);
 		console.log(labels);
-		existingLabels = [...labels];
+		assignedLabels.set([...labels]);
 	}
 
 	async function getEvent(input) {
@@ -58,8 +58,8 @@
 			{#key $labels.length}
 				<Labels />
 			{/key}
-			{#key existingLabels.length}
-				<AssignedLabels labels={existingLabels} />
+			{#key $assignedLabels.length}
+				<AssignedLabels labels={$assignedLabels} />
 			{/key}
 			<a target="_blank" href="https://snort.social/p/{event.pubkey}">
 				<img class="w-16 h-16 m-2 rounded-full" src={userProfile?.image} />

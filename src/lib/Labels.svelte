@@ -9,7 +9,7 @@
 				{#if label.selectedType == 'Topic'}
 					Topic:
 					{#each label.topics.split(',') as topic}
-						<div class="mx-2 badge badge-warning">{topic}</div>
+						<span class="mx-2 badge badge-warning">{topic}</span>
 					{/each}
 				{:else if label.selectedType == 'Pubkey'}
 					Pubkey: <div class="mx-2 badge badge-warning">{label.pubkey}</div>

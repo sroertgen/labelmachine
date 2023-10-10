@@ -31,8 +31,6 @@
 	}
 
 	const parsedLabels = parseLabels(labels);
-
-	$: console.log(parsedLabels);
 </script>
 
 <p>

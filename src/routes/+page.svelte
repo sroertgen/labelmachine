@@ -5,7 +5,7 @@
 	import ModalLogin from '$lib/ModalLogin.svelte';
 	import Avatar from '$lib/Avatar.svelte';
 	import Check from '$lib/icons/check.svelte';
-	import { labels, event, searchInput } from '$lib/store';
+	import { labels, event, searchInput, assignedLabels } from '$lib/store';
 	import { user } from '$lib/user';
 
 	let publishing = false;
@@ -16,7 +16,7 @@
 
 <div class="flex flex-col mx-auto w-full md:max-w-[640px]">
 	<div class="flex flex-row justify-between items-center mt-2 mx-2">
-		<h1 class="text-3xl font-bold text-purple-500 italic">Label Machine</h1>
+		<h1 class="text-3xl font-bold text-purple-500 italic">LabelMachine</h1>
 		{#if !$user.pk}
 			<button
 				onclick="login_modal.showModal()"
@@ -45,7 +45,8 @@
 					disabled={!publishEnabled}
 					on:click={async () => {
 						publishing = true;
-						await labels.publishEvents();
+						const publishedEvents = await labels.publishEvents();
+						$assignedLabels = [...$assignedLabels, ...publishedEvents];
 						publishing = false;
 						published = true;
 					}}

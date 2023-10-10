@@ -61,6 +61,7 @@ function createLabels() {
       return events
     },
     publishEvents: async () => {
+      const publishedEvents = []
       const ndk = get(ndkStore)
       const user = get(userStore)
       const eventId = get(event).id
@@ -77,8 +78,9 @@ function createLabels() {
         event.tags = e
         await event.publish()
         console.log(event)
+        publishedEvents.push(event)
       }
-      return true
+      return publishedEvents
     }
   }
 }
@@ -87,3 +89,6 @@ export const searchInput = writable("")
 
 
 export const event = writable({})
+
+export const assignedLabels = writable([])
+
