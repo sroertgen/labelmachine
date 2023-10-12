@@ -76,7 +76,7 @@ function createLabels() {
         const event = new NDKEvent(ndk);
         event.kind = 1985
         event.tags = e
-        await event.publish()
+        event.publish()
         console.log(event)
         publishedEvents.push(event)
       }
