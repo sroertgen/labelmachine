@@ -5,7 +5,7 @@
 	import ModalLogin from '$lib/ModalLogin.svelte';
 	import Avatar from '$lib/Avatar.svelte';
 	import Check from '$lib/icons/check.svelte';
-	import { labels, event, searchInput, assignedLabels } from '$lib/store';
+	import { labels, thingToLabel, searchInput, assignedLabels } from '$lib/store';
 	import { user } from '$lib/user';
 
 	let publishing = false;
@@ -33,7 +33,7 @@
 		<ModalLogin />
 		<div class="gap-4 mt-2 flex md:flex-row flex-col justify-center">
 			<button
-				disabled={!$event.id}
+				disabled={!$thingToLabel.id}
 				onclick="my_modal_2.showModal()"
 				class="btn bg-green-400 hover:bg-green-400 text-black">Add Labels!</button
 			>
@@ -67,7 +67,7 @@
 					publishing = false;
 					labels.reset();
 					searchInput.set('');
-					event.set({});
+					thingToLabel.set({});
 				}}
 				class="btn bg-red-400 hover:bg-red-400 text-black md:mt-0 mt-6">Start over!</button
 			>
