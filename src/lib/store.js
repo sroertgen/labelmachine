@@ -87,8 +87,7 @@ function createLabels() {
 
 export const searchInput = writable("")
 
-
-export const event = writable({})
+export const thingToLabel = writable({})
 
 export const assignedLabels = writable([])
 
