@@ -33,7 +33,7 @@
 		<ModalLogin />
 		<div class="gap-4 mt-2 flex md:flex-row flex-col justify-center">
 			<button
-				disabled={!$thingToLabel.id}
+				disabled={!Object.keys($thingToLabel).length}
 				onclick="my_modal_2.showModal()"
 				class="btn bg-green-400 hover:bg-green-400 text-black">Add Labels!</button
 			>

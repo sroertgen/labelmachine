@@ -14,11 +14,18 @@
 	 */
 	export const BECH32_REGEX = /[\x21-\x7E]{1,83}1[023456789acdefghjklmnpqrstuvwxyz]{6,}/;
 
-	let userProfile;
-	let existingLabels = [];
-
-	async function getAssignedLabels(eventId) {
-		const filter = { kinds: [1985], limit: 200, '#e': [eventId] };
+	/**
+	 * @param {string} id
+	 * @param {("event"|"pubkey"|"webresource")} type
+	 */
+	async function getAssignedLabels(id, type) {
+		const labelTarget = {
+			event: { '#e': [id] },
+			pubkey: { '#p': [id] },
+			webresource: { '#r': [id] }
+		};
+		const filter = { kinds: [1985], limit: 200, ...labelTarget[type] };
+		console.log('filter', filter);
 		const labels = await $ndkStore.fetchEvents(filter);
 		if (labels) {
 			assignedLabels.set([...labels]);
@@ -36,6 +43,7 @@
 			if (!Object.keys(user.profile).length) {
 				throw new Error('No user profile found!');
 			}
+			console.log('user', user);
 			thingToLabel.set({
 				...user
 			});
@@ -95,44 +103,57 @@
 	async function parseInput(input) {
 		try {
 			const { prefix, words } = bech32.decode(input, Bech32MaxSize);
+			console.log(prefix, words);
 			const { type, data } = nip19.decode(input);
 			if (prefix === 'note') {
 				await getEvent(data);
-				getAssignedLabels(data);
+				getAssignedLabels(data, 'event');
 			} else if (prefix === 'nevent') {
 				await getEvent(data.id);
-				getAssignedLabels(data.id);
+				getAssignedLabels(data.id, 'event');
 			} else if (prefix === 'npub') {
 				const pubkey = data;
 				await getProfile(pubkey);
-				getAssignedLabels(pubkey);
+				getAssignedLabels(pubkey, 'pubkey');
 			} else if (prefix === 'nprofile') {
 				const pubkey = data.pubkey;
 				await getProfile(pubkey);
-				getAssignedLabels(pubkey);
+				getAssignedLabels(pubkey, 'pubkey');
 			}
 		} catch (e) {
 			// check if hex or url
 			if (isHexadecimal(input)) {
+				console.log('hex!');
 				try {
 					await getProfile(input);
-					getAssignedLabels(input);
+					getAssignedLabels(input, 'pubkey');
 				} catch (error) {
 					console.error(error);
 
 					// now try if it is an event
 					try {
 						await getEvent(input);
-						getAssignedLabels(input);
+						getAssignedLabels(input, 'event');
 					} catch (ex2) {
 						console.error(ex2);
 					}
 				}
 			} else if (isValidUrl(input)) {
+				const response = await fetch(`/api/urlToReader?url=${input}`);
+				const article = await response.json();
+				thingToLabel.set({
+					type: 'html',
+					title: article.title,
+					content: article.content,
+					url: article.url
+				});
+				getAssignedLabels(article.url, 'webresource');
+			} else {
+				console.error('unknown input, what is that?');
 			}
-			console.error('unknown input, what is that?');
 		}
 	}
+
 	async function getUserProfile(pubkey) {
 		const user = await $ndkStore.getUser({ hexpubkey: pubkey });
 		const profile = await user.fetchProfile();
@@ -164,20 +185,32 @@
 			{#key $assignedLabels.length}
 				<AssignedLabels labels={$assignedLabels} />
 			{/key}
-			<a
-				target="_blank"
-				href="https://snort.social/p/{$thingToLabel?.pubkey || $thingToLabel._hexpubkey}"
-			>
-				{#key $thingToLabel}
-					{#await getProfileImage() then image}
-						<img class="w-16 h-16 m-2 rounded-full" src={image} />
-					{/await}
-				{/key}
-			</a>
 			{#if $thingToLabel.kind === 1}
+				<a
+					target="_blank"
+					href="https://snort.social/p/{$thingToLabel?.pubkey || $thingToLabel._hexpubkey}"
+				>
+					{#key $thingToLabel}
+						{#await getProfileImage() then image}
+							<img class="w-16 h-16 m-2 rounded-full" src={image} />
+						{/await}
+					{/key}
+				</a>
 				<p class="whitespace-pre-wrap break-words">{$thingToLabel.content}</p>
 			{:else if $thingToLabel._hexpubkey}
+				<a
+					target="_blank"
+					href="https://snort.social/p/{$thingToLabel?.pubkey || $thingToLabel._hexpubkey}"
+				>
+					{#key $thingToLabel}
+						{#await getProfileImage() then image}
+							<img class="w-16 h-16 m-2 rounded-full" src={image} />
+						{/await}
+					{/key}
+				</a>
 				<p class="whitespace-pre-wrap break-words">{$thingToLabel.profile.about}</p>
+			{:else if $thingToLabel.type === 'html'}
+				<div>{@html $thingToLabel.content}</div>
 			{:else}
 				<p class="whitespace-pre-wrap break-words italic">No content to show</p>
 			{/if}
