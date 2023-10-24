@@ -41,14 +41,11 @@ function createLabels() {
     buildEventLabels: (id, type) => {
       /** @type {Array<string[]>} */
       let events = [];
-      let labelTarget = [];
-      if (type === "event") {
-        labelTarget = ["e", id];
-      } else if (type === "pubkey") {
-        labelTarget = ["p", id];
-      } else if (type === "webresource") {
-        labelTarget = ["r", id];
-      }
+      const labelTarget = {
+        event: ['e', id],
+        pubkey: ['p', id],
+        webresource: ['r', id]
+      };
 
       labels.subscribe((value) => {
         events = value.map(l => {
@@ -56,19 +53,19 @@ function createLabels() {
             return [
               ["L", "#t"],
               ...(l.topics.split(",").map(t => ["l", t, "#t"])),
-              labelTarget
+              labelTarget[type]
             ]
           } else if (l.selectedType == "Pubkey") {
             return [
               ["L", "#p"],
               ["l", l.pubkey, "#p"],
-              labelTarget
+              labelTarget[type]
             ]
           } else if (l.selectedType == "Custom Label") {
             return [
               ["L", l.labelNamespace],
               ["l", l.label, l.labelNamespace],
-              labelTarget
+              labelTarget[type]
             ]
           }
         })
@@ -79,9 +76,6 @@ function createLabels() {
       const publishedEvents = []
       const ndk = get(ndkStore)
       const user = get(userStore)
-      // TODO how to handle publishing random links?
-      // maybe the resource is an actor itself?
-      // maybe just add the url as an `r` tag
       let referenceId;
       /** @type {Array<string[]>} */
       let labelEvents = [];

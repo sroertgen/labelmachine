@@ -7,7 +7,7 @@
 	<input
 		bind:value={$searchInput}
 		class="input input-bordered join-item w-full"
-		placeholder="Enter event id, note id or nevent"
+		placeholder="Enter event id, pubkey or url..."
 	/>
 	<button class="btn join-item rounded-r-lg bg-purple-500 w-fit hover:bg-purple-500"
 		><MagnifyingGlass /></button

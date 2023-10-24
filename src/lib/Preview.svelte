@@ -217,8 +217,8 @@
 		</div>
 	{:else}
 		<div class="flex flex-col items-center justify-center h-full">
-			<p class="">Login & Enter an event id, note id or nevent</p>
-			<p class="">Then do some labeling and publish!</p>
+			<p>Login & Enter an event id, note id or nevent, some npub or just some good old url!</p>
+			<p>Then do some labeling and publish!</p>
 		</div>
 		<p />{/if}
 </div>
