@@ -7,16 +7,24 @@
 	import Check from '$lib/icons/check.svelte';
 	import { labels, thingToLabel, searchInput, assignedLabels } from '$lib/store';
 	import { user } from '$lib/user';
+	import Taxonomy from '$lib/Taxonomy.svelte';
 
 	let publishing = false;
 	let published = false;
 
 	$: publishEnabled = $labels[0].selectedType !== 'What info to add?' && Boolean($user.pk);
+
+	export let data;
 </script>
 
 <div class="flex flex-col mx-auto w-full md:max-w-[640px]">
 	<div class="flex flex-row justify-between items-center mt-2 mx-2">
 		<h1 class="text-3xl font-bold text-purple-500 italic">LabelMachine</h1>
+		<select class="select select-bordered w-full max-w-xs">
+			<option disabled selected>Who shot first?</option>
+			<option>Han Solo</option>
+			<option>Greedo</option>
+		</select>
 		{#if !$user.pk}
 			<button
 				onclick="login_modal.showModal()"
@@ -31,6 +39,7 @@
 		<Preview />
 		<Modal />
 		<ModalLogin />
+		<Taxonomy />
 		<div class="gap-4 mt-2 flex md:flex-row flex-col justify-center">
 			<button
 				disabled={!Object.keys($thingToLabel).length}
