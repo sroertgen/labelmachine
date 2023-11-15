@@ -56,7 +56,7 @@
 		{#each $selectedTaxonomy.hasTopConcept as topConcept}
 			{#if !topConcept.narrower}
 				<button
-					on:click={() => publishLabel(topConcept.prefLabel.en)}
+					on:click={() => addLabel(topConcept.prefLabel.en)}
 					class="btn btn-sm w-full btn-primary m-1 h-max">{topConcept.prefLabel.en}</button
 				>
 			{:else}

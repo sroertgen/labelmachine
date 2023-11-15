@@ -7,6 +7,10 @@ const taxoUrls = [
   },
   {
     url: "https://skohub.io/dini-ag-kim/hochschulfaechersystematik/heads/master/w3id.org/kim/hochschulfaechersystematik/scheme.json"
+  },
+  {
+    url: "https://sroertgen.github.io/LabelTaxonomies/labelmachine.org/fck-rdf-nostr/index.json",
+    preferredNamespaceUri: "fck.rdf.categories"
   }
 ]
 
