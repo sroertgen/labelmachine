@@ -21,7 +21,8 @@ function createUser() {
       const npub = nip19.npubEncode(pk)
       const nUser = ndk.getUser({ npub: npub })
       await nUser.fetchProfile()
-      update(u => ({ ...u, pk: pk, npub: npub, profile: nUser.profile, signer }))
+      const followers = await nUser.follows()
+      update(u => ({ ...u, pk: pk, npub: npub, profile: nUser.profile, signer, followers }))
     },
     reset: () => {
       set(defaultUser)

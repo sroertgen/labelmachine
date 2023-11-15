@@ -5,6 +5,7 @@
 	import Labels from './Labels.svelte';
 	import { nip19 } from 'nostr-tools';
 	import AssignedLabels from './AssignedLabels.svelte';
+	import { events } from './events';
 
 	const Bech32MaxSize = 5000;
 
@@ -174,9 +175,28 @@
 		}
 	}
 	$: (async () => $searchInput.length > 3 && (await parseInput($searchInput)))();
+	$: if ($searchInput.length <= 3 && $events.length && !Object.keys($thingToLabel).length) {
+		events.update((e) => {
+			const event = e.pop();
+			thingToLabel.set(event);
+			return e;
+		});
+	}
 </script>
 
-<div class="border-white border-2 border-solid rounded h-64 overflow-auto">
+<div class="relative border-white border-2 border-solid h-full rounded overflow-auto">
+	<button
+		class="right-2 bottom-2 absolute btn bg-green-400 hover:bg-green-400 text-black m-1"
+		on:click={() => {
+			events.update((e) => {
+				const event = e.pop();
+				thingToLabel.set(event);
+				return e;
+			});
+			labels.reset();
+			assignedLabels.set([]);
+		}}>Next</button
+	>
 	{#if Object.keys($thingToLabel).length}
 		<div class="p-2">
 			{#key $labels.length}

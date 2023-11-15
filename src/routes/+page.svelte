@@ -1,88 +1,66 @@
 <script>
+	import { Toaster } from 'svelte-french-toast';
 	import Search from '$lib/Search.svelte';
 	import Preview from '$lib/Preview.svelte';
 	import Modal from '$lib/Modal.svelte';
 	import ModalLogin from '$lib/ModalLogin.svelte';
-	import Avatar from '$lib/Avatar.svelte';
-	import Check from '$lib/icons/check.svelte';
-	import { labels, thingToLabel, searchInput, assignedLabels } from '$lib/store';
-	import { user } from '$lib/user';
+	import Header from '$lib/Header.svelte';
 	import Taxonomy from '$lib/Taxonomy.svelte';
+	import LabelActions from '$lib/LabelActions.svelte';
+	import { user } from '$lib/user';
+	import { ndkStore } from '$lib/ndk';
+	import { events } from '$lib/events';
 
-	let publishing = false;
-	let published = false;
+	async function loadEvents() {
+		const filter = {
+			kinds: [1],
+			limit: 100,
+			since: Math.floor((Date.now() - 7 * 24 * 60 * 60 * 1000) / 1000)
+		};
+		// If we're in follows mode, add authors filter
+		if ($user.pk) {
+			filter.authors = Array.from($user.followers).map((f) => f._hexpubkey);
+		} else {
+		}
 
-	$: publishEnabled = $labels[0].selectedType !== 'What info to add?' && Boolean($user.pk);
+		// Fetch events
+		const eventSet = await $ndkStore.fetchEvents(filter);
 
-	export let data;
+		// Filter out reposts and quotes
+		$events = [...eventSet]
+			.filter((e) => !e.tags.map((t) => t[0]).includes('e'))
+			.filter((e) => !e.tags.map((t) => t[0]).includes('q'));
+	}
 </script>
 
+<Toaster />
+
+{#key $user.pk}
+	{#await loadEvents()}{/await}
+{/key}
 <div class="flex flex-col mx-auto w-full md:max-w-[640px]">
-	<div class="flex flex-row justify-between items-center mt-2 mx-2">
-		<h1 class="text-3xl font-bold text-purple-500 italic">LabelMachine</h1>
-		<select class="select select-bordered w-full max-w-xs">
-			<option disabled selected>Who shot first?</option>
-			<option>Han Solo</option>
-			<option>Greedo</option>
-		</select>
-		{#if !$user.pk}
-			<button
-				onclick="login_modal.showModal()"
-				class="btn bg-purple-500 hover:bg-purple-500 text-black">Login</button
-			>
-		{:else}
-			<Avatar />
-		{/if}
-	</div>
-	<div class="mx-2">
+	<Header />
+	<div class="mx-2 w-full">
 		<Search />
-		<Preview />
+		<div class="sm:flex sm:flex-row h-full">
+			<div class="hidden sm:flex sm:flex-col sm:w-2/3 h-64">
+				<Preview />
+				<LabelActions />
+			</div>
+			<div class="sm:hidden h-64">
+				<Preview />
+			</div>
+			<div class="sm:w-1/3">
+				<Taxonomy />
+			</div>
+			<div class="sm:hidden h-64">
+				<LabelActions />
+			</div>
+		</div>
 		<Modal />
 		<ModalLogin />
-		<Taxonomy />
-		<div class="gap-4 mt-2 flex md:flex-row flex-col justify-center">
-			<button
-				disabled={!Object.keys($thingToLabel).length}
-				onclick="my_modal_2.showModal()"
-				class="btn bg-green-400 hover:bg-green-400 text-black">Add Labels!</button
-			>
-			<div
-				class="tooltip"
-				data-tip={publishEnabled ? null : 'Login, add an event and do some labeling!'}
-			>
-				<button
-					disabled={!publishEnabled}
-					on:click={async () => {
-						publishing = true;
-						const publishedEvents = await labels.publishEvents();
-						$assignedLabels = [...$assignedLabels, ...publishedEvents];
-						publishing = false;
-						published = true;
-					}}
-					class="btn bg-green-400 hover:bg-green-400 text-black w-full md:w-fit"
-				>
-					{#if publishing}
-						<span class="loading loading-spinner" />
-					{:else if published}
-						<Check />
-					{/if}
-					Publish labels!
-				</button>
-			</div>
-			<button
-				on:click={(e) => {
-					e.preventDefault();
-					published = false;
-					publishing = false;
-					labels.reset();
-					searchInput.set('');
-					thingToLabel.set({});
-				}}
-				class="btn bg-red-400 hover:bg-red-400 text-black md:mt-0 mt-6">Start over!</button
-			>
-		</div>
 	</div>
-	<div class="mt-12 text-center flex flex-col md:flex-row items-center justify-between gap-6">
+	<div class="sm:mt-12 text-center flex flex-col md:flex-row items-center justify-between gap-6">
 		<p>
 			Made with 💜 by <a
 				class="underline"

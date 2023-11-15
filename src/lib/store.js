@@ -4,7 +4,15 @@ import { ndkStore } from "$lib/ndk";
 import { user as userStore } from "$lib/user";
 import { NDKPrivateKeySigner, NDKEvent, NDKNip07Signer } from "@nostr-dev-kit/ndk";
 
-
+/**
+ * @typedef {Object} Label
+ * @property {string} id
+ * @property {"Topic"|"Pubkey"|"Custom Label"} selectedType
+ * @property {string} topics
+ * @property {string} pubkey
+ * @property {string} label
+ * @property {string} labelNamespace
+ */
 const createlabel = () => ({
   id: nanoid(),
   selectedType: 'What info to add?',
@@ -22,14 +30,34 @@ function createLabels() {
     set,
     subscribe,
     update,
-    addLabel: () => update((l) => {
-      return [...l, createlabel()]
-    }),
+    /**
+     * Creates a new label in appends it to label store
+     * @returns {Label} - newly created label
+     */
+    addLabel: () => {
+      const newLabel = createlabel()
+      labels.update(l => ([...l, newLabel]))
+      return newLabel
+    },
+    /**
+     * TODO this needs cleanup
+     * @param {"topics"|"pubkey"|"labelNamespace"|"label"} labelType
+     * @param {string} id
+     * @param {string} value
+     * @retuns {Array}
+     */
     updateLabel: (labelType, id, value) => {
       labels.update((l) => {
         const oldLabel = l.find((l) => l.id === id);
         const filtered = l.filter((l) => l.id !== id);
-        return [...filtered, { ...oldLabel, [labelType]: value }]
+        const selectedType = labelType === "topics"
+          ? "Topic"
+          : labelType === "pubkey"
+            ? "Pubkey"
+            : labelType === "labelNamespace"
+              ? "Custom Label"
+              : "Custom Label"
+        return [...filtered, { ...oldLabel, selectedType, [labelType]: value }]
       })
     },
     reset: () => set([createlabel()]),
@@ -48,7 +76,7 @@ function createLabels() {
       };
 
       labels.subscribe((value) => {
-        events = value.map(l => {
+        events = value.filter(v => v.selectedType !== "What info to add?").map(l => {
           if (l.selectedType == "Topic") {
             return [
               ["L", "#t"],
