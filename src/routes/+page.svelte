@@ -18,7 +18,7 @@
 			since: Math.floor((Date.now() - 7 * 24 * 60 * 60 * 1000) / 1000)
 		};
 		// If we're in follows mode, add authors filter
-		if ($user.pk) {
+		if ($user.pk && $user.followers.size > 0) {
 			filter.authors = Array.from($user.followers).map((f) => f._hexpubkey);
 		} else {
 		}

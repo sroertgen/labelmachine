@@ -24,9 +24,10 @@
 					$assignedLabels = [...$assignedLabels, ...publishedEvents];
 					publishing = false;
 					published = true;
+					toast.success('Published!');
 				}
 			}}
-			class="btn bg-green-400 hover:bg-green-400 text-black"
+			class="btn bg-green-400 hover:bg-green-400 text-black w-full"
 		>
 			{#if publishing}
 				<span class="loading loading-spinner" />
@@ -49,6 +50,7 @@
 			labels.reset();
 			searchInput.set('');
 			thingToLabel.set({});
+			assignedLabels.set([]);
 		}}
 		class="btn bg-red-400 hover:bg-red-400 text-black md:mt-0 mt-6">Start over!</button
 	>

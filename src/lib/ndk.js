@@ -3,7 +3,6 @@ import NDK from '@nostr-dev-kit/ndk';
 
 const ndk = new NDK({
   explicitRelayUrls: [
-    'wss://nostr.btc-library.com',
     'wss://purplepag.es',
     'wss://relay.nostr.band',
     'wss://nos.lol',

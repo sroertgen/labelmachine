@@ -110,13 +110,10 @@ function createLabels() {
       if (get(thingToLabel).kind === 1) {
         referenceId = get(thingToLabel).id
         labelEvents = labels.buildEventLabels(referenceId, "event")
-        console.log("event")
       } else if (get(thingToLabel)._hexpubkey) {
-        console.log("person")
         referenceId = get(thingToLabel)._hexpubkey
         labelEvents = labels.buildEventLabels(referenceId, "pubkey")
       } else if (get(thingToLabel).content) {
-        console.log("article")
         referenceId = get(thingToLabel).url
         labelEvents = labels.buildEventLabels(referenceId, "webresource")
       }
@@ -130,7 +127,7 @@ function createLabels() {
         const event = new NDKEvent(ndk);
         event.kind = 1985
         event.tags = e
-        event.publish()
+        await event.publish()
         console.log(event)
         publishedEvents.push(event)
       }

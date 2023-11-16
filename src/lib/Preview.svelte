@@ -102,6 +102,8 @@
 	 * @returns {Promise<Map<string, (string|object)>>} A Map with a "type" key and a "ThingToLabel" key.
 	 */
 	async function parseInput(input) {
+		assignedLabels.set([]);
+		labels.reset();
 		try {
 			const { prefix, words } = bech32.decode(input, Bech32MaxSize);
 			console.log(prefix, words);
@@ -112,6 +114,11 @@
 			} else if (prefix === 'nevent') {
 				await getEvent(data.id);
 				getAssignedLabels(data.id, 'event');
+				// TODO add support for naddr
+				// } else if (prefix === 'naddr') {
+				// 	console.log(data);
+				// 	await getEvent(data.id);
+				// 	getAssignedLabels(data.identifier, 'place');
 			} else if (prefix === 'npub') {
 				const pubkey = data;
 				await getProfile(pubkey);

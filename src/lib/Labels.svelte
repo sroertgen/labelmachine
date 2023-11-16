@@ -2,7 +2,7 @@
 	import { labels } from '$lib/store';
 </script>
 
-<div class="flex flex-col w-3/4">
+<div class="flex flex-col">
 	{#each $labels as label}
 		<div class="flex flex-row flex-wrap">
 			{#if label.selectedType == 'Topic'}
